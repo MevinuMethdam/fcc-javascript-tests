@@ -5,27 +5,42 @@ suite('Unit Tests', function () {
   suite('Basic Assertions', function () {
     // #1
     test('#isNull, #isNotNull', function () {
-      assert.fail(null, 'This is an optional error description - e.g. null is null');
-      assert.fail(1, '1 is not null');
+      assert.isNull(null, 'This is an optional error description - e.g. null is null');
+      assert.isNotNull(1, '1 is not null');
     });
     // #2
     test('#isDefined, #isUndefined', function () {
-      assert.fail(null, 'null is not undefined');
-      assert.fail(undefined, 'undefined IS undefined');
-      assert.fail('hello', 'A string is not undefined');
-    });
+  // null is a defined value, so we use isDefined.
+  assert.isDefined(null, 'null is not undefined');
+  
+  // undefined is the value we are checking for, so we use isUndefined.
+  assert.isUndefined(undefined, 'undefined IS undefined');
+
+  // A string has a value, so it is defined.
+  assert.isDefined('hello', 'A string is not undefined');
+});
     // #3
     test('#isOk, #isNotOk', function () {
-      assert.fail(null, 'null is falsey');
-      assert.fail("I'm truthy", 'A string is truthy');
-      assert.fail(true, 'true is truthy');
-    });
+  // null is a "falsy" value.
+  assert.isNotOk(null, 'null is falsey');
+
+  // Any non-empty string is "truthy".
+  assert.isOk("I'm truthy", 'A string is truthy');
+
+  // The boolean true is also "truthy".
+  assert.isOk(true, 'true is truthy');
+});
     // #4
     test('#isTrue, #isNotTrue', function () {
-      assert.fail(true, 'true is true');
-      assert.fail(!!'double negation', 'Double negation of a truthy value is true');
-      assert.fail({ value: 'truthy' }, 'Objects are truthy, but are not boolean values');
-    });
+  // This is the boolean value true.
+  assert.isTrue(true, 'true is true');
+
+  // A double negation (!!) on a truthy string evaluates to the boolean true.
+  assert.isTrue(!!'double negation', 'Double negation of a truthy value is true');
+
+  // An object is "truthy", but it is not the boolean value `true`.
+  assert.isNotTrue({ value: 'truthy' }, 'Objects are truthy, but are not boolean values');
+});
   });
 
   // -----------------------------------------------------------------------------
