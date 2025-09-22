@@ -48,23 +48,40 @@ suite('Unit Tests', function () {
   suite('Equality', function () {
     // #5
     test('#equal, #notEqual', function () {
-      assert.fail(12, '12', 'Numbers are coerced into strings with ==');
-      assert.fail({ value: 1 }, { value: 1 }, '== compares object references');
-      assert.fail(6 * '2', '12');
-      assert.fail(6 + '2', '12');
-    });
+  // The number 12 IS loosely equal to the string '12' due to type coercion.
+  assert.equal(12, '12', 'Numbers are coerced into strings with ==');
+  
+  // These are two different objects in memory, so their references are not equal.
+  assert.notEqual({ value: 1 }, { value: 1 }, '== compares object references');
+  
+  // 6 * '2' evaluates to the number 12, which is loosely equal to the string '12'.
+  assert.equal(6 * '2', '12');
+  
+  // 6 + '2' concatenates to the string '62', which is not equal to the string '12'.
+  assert.notEqual(6 + '2', '12');
+});
     // #6
     test('#strictEqual, #notStrictEqual', function () {
-      assert.fail(6, '6');
-      assert.fail(6, 3 * 2);
-      assert.fail(6 * '2', 12);
-      assert.fail([1, 'a', {}], [1, 'a', {}]);
-    });
+  // The number 6 is NOT strictly equal to the string '6' because their types are different.
+  assert.notStrictEqual(6, '6');
+  
+  // 3 * 2 evaluates to the number 6, which is strictly equal to 6.
+  assert.strictEqual(6, 3 * 2);
+  
+  // 6 * '2' evaluates to the number 12, which is strictly equal to 12.
+  assert.strictEqual(6 * '2', 12);
+  
+  // These are two different arrays in memory, so their references are not strictly equal.
+  assert.notStrictEqual([1, 'a', {}], [1, 'a', {}]);
+});
     // #7
     test('#deepEqual, #notDeepEqual', function () {
-      assert.fail({ a: '1', b: 5 }, { b: 5, a: '1' }, "The order of keys doesn't matter");
-      assert.fail({ a: [5, 6] }, { a: [6, 5] }, 'The order of array elements does matter');
-    });
+  // These objects have the same keys and values, so they are deeply equal. The order of keys does not matter.
+  assert.deepEqual({ a: '1', b: 5 }, { b: 5, a: '1' }, "The order of keys doesn't matter");
+  
+  // The inner arrays [5, 6] and [6, 5] have different element orders. For arrays, order matters. Thus, the objects are not deeply equal.
+  assert.notDeepEqual({ a: [5, 6] }, { a: [6, 5] }, "The order of array elements does matter");
+});
   });
 
   // -----------------------------------------------------------------------------
