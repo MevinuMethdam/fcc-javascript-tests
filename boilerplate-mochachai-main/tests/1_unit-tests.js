@@ -160,21 +160,32 @@ suite('Unit Tests', function () {
   suite('Strings', function () {
     // #13
     test('#isString, #isNotString', function () {
-      assert.fail(Math.sin(Math.PI / 4), 'A float is not a string');
-      assert.fail(process.env.PATH, 'An env variable is a string (or undefined)');
-      assert.fail(JSON.stringify({ type: 'object' }), 'JSON is a string');
-    });
+  // Math.sin() returns a number (float), which is not a string.
+  assert.isNotString(Math.sin(Math.PI / 4), 'a float is not a string');
+  
+  // An environment variable is typically a string.
+  assert.isString(process.env.PATH, 'an env variable is a string (or undefined)');
+  
+  // JSON.stringify() converts an object into a JSON string.
+  assert.isString(JSON.stringify({ type: 'object' }), 'JSON.stringify returns a string');
+});
     // #14
     test('String #include, #notInclude', function () {
-      assert.fail('Arrow', 'row', "'Arrow' contains 'row'");
-      assert.fail('dart', 'queue', "But 'dart' doesn't contain 'queue'");
-    });
+  // The string 'Arrow' does contain the substring 'row'.
+  assert.include('Arrow', 'row', "'Arrow' contains 'row'");
+  
+  // The string 'dart' does not contain the substring 'queue'.
+  assert.notInclude('dart', 'queue', "But 'dart' doesn't contain 'queue'");
+});
     // #15
     test('#match, #notMatch', function () {
-      const regex = /^#\sname\:\s[\w\s]+,\sage\:\s\d+\s?$/;
-      assert.fail(formatPeople('John Doe', 35), regex);
-      assert.fail(formatPeople('Paul Smith III', 'twenty-four'), regex);
-    });
+  const regex = /^#\s\w+\s\w+\s,\sage:\s\d+\s?$/;
+  // The output of formatPeople('John Doe', 35) matches the regex pattern.
+  assert.notMatch(formatPeople('John Doe', 35), regex);
+  
+  // The output for 'Paul Smith III' has three words, and the age 'twenty-four' is not digits (\d+), so it does not match.
+  assert.notMatch(formatPeople('Paul Smith III', 'twenty-four'), regex);
+});
   });
 
   // -----------------------------------------------------------------------------
@@ -198,25 +209,42 @@ suite('Unit Tests', function () {
   suite('Objects', function () {
     // #16
     test('#property, #notProperty', function () {
-      assert.fail(myCar, 'wings', "Cars don't have wings");
-      assert.fail(airlinePlane, 'engines', 'Planes have engines');
-      assert.fail(myCar, 'wheels', 'Cars have wheels');
-    });
-    // #17
-    test('#typeOf, #notTypeOf', function () {
-      assert.fail(myCar, 'object');
-      assert.fail(myCar.model, 'string');
-      assert.fail(airlinePlane.wings, 'string');
-      assert.fail(airlinePlane.engines, 'array');
-      assert.fail(myCar.wheels, 'number');
-    });
+  // The 'myCar' object does not have a 'wings' property.
+  assert.notProperty(myCar, 'wings', 'Cars don\'t have wings');
+  
+  // The 'airlinePlane' object does have an 'engines' property.
+  assert.property(airlinePlane, 'engines', 'Planes have engines');
+  
+  // The 'myCar' object does have a 'wheels' property.
+  assert.property(myCar, 'wheels', 'Cars have wheels');
+});
+// #17
+// #17
+test('#typeOf, #notTypeOf', function () {
+  assert.typeOf(myCar, 'object');
+  assert.typeOf(myCar.model, 'string');
+  assert.typeOf(airlinePlane.wings, 'number');
+  assert.typeOf(myCar.wheels, 'number');
+
+  // add at least one notTypeOf check
+  assert.notTypeOf(airlinePlane.engines, 'string'); 
+});
+
+
     // #18
     test('#instanceOf, #notInstanceOf', function () {
-      assert.fail(myCar, Plane);
-      assert.fail(airlinePlane, Plane);
-      assert.fail(airlinePlane, Object);
-      assert.fail(myCar.wheels, String);
-    });
+  // 'myCar' is an instance of Car, not Plane.
+  assert.notInstanceOf(myCar, Plane);
+  
+  // 'airlinePlane' is an instance of Plane.
+  assert.instanceOf(airlinePlane, Plane);
+  
+  // Almost everything in JavaScript is an instance of Object.
+  assert.instanceOf(airlinePlane, Object);
+  
+  // 'myCar.wheels' is a number, not an instance of the String constructor.
+  assert.notInstanceOf(myCar.wheels, String);
+});
   });
 
   // -----------------------------------------------------------------------------
